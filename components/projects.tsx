@@ -3,47 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { ExternalLink } from "lucide-react"
-
-interface Project {
-  id: number
-  title: string
-  description: string
-  tags: string[]
-  year: string
-  image: string
-  slug: string
-}
-
-const projectsData: Project[] = [
-  {
-    id: 1,
-    title: "Minimal Design System",
-    description: "A comprehensive design system built for modern web applications with accessibility at its core.",
-    tags: ["Design", "React", "Tailwind"],
-    year: "2024",
-    image: "/minimal-design-system.jpg",
-    slug: "design-system",
-  },
-  {
-    id: 2,
-    title: "E-Commerce Platform",
-    description: "High-performance e-commerce platform with real-time inventory and seamless checkout experience.",
-    tags: ["Next.js", "TypeScript", "PostgreSQL"],
-    year: "2024",
-    image: "/ecommerce-platform-interface.png",
-    slug: "ecommerce-platform",
-  },
-  {
-    id: 3,
-    title: "Analytics Dashboard",
-    description: "Real-time analytics dashboard providing insights with beautiful data visualizations.",
-    tags: ["React", "Chart.js", "WebSockets"],
-    year: "2023",
-    image: "/analytics-dashboard.png",
-    slug: "analytics-dashboard",
-  },
-]
-
+import { projectsData } from "@/data/projects"
 export default function Projects() {
   const [visibleItems, setVisibleItems] = useState<number[]>([])
 
@@ -67,7 +27,7 @@ export default function Projects() {
           {projectsData.map((project, index) => (
             <Link
               key={project.id}
-              href={`/projects/${project.slug}`}
+              href={`/projects/${project.id}`}
               className={`group transition-all duration-500 ${
                 visibleItems.includes(index) ? "fade-in-up opacity-100" : "opacity-0"
               }`}
