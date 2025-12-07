@@ -1,14 +1,9 @@
 export const api = async (url: string, options: RequestInit = {}) => {
-  const stored = localStorage.getItem("adminAuth");
-  let token = null;
+  let token: string | null = null;
 
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored);
-      token = parsed?.data?.token;
-    } catch (err) {
-      console.error("Failed to parse adminAuth:", err);
-    }
+  if (typeof document !== "undefined") {
+    const match = document.cookie.match(/(?:^|;\s*)adminToken=([^;]+)/);
+    token = match ? decodeURIComponent(match[1]) : null;
   }
 
   const res = await fetch(`http://localhost:5000/api${url}`, {

@@ -1,56 +1,83 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { useMutation } from "@tanstack/react-query"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { authServices } from "@/services/authServices"
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { authServices } from "@/services/authServices";
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
   const mutation = useMutation<any, Error, { email: string; password: string }>(
     {
-      mutationFn: (data: { email: string; password: string }) => authServices.login(data),
-      onSuccess(data: any, variables: { email: string; password: string }) {
+      mutationFn: (payload) => authServices.login(payload),
+
+      onSuccess(data, variables) {
+        const token = data?.token;
+
+        if (!token) {
+          console.error("No token returned from API");
+          setError("Invalid login response");
+          return;
+        }
+
         try {
           localStorage.setItem(
             "adminAuth",
-            JSON.stringify({ email: variables.email, authenticated: true, data })
-          )
+            JSON.stringify({
+              email: variables.email,
+              authenticated: true,
+              data,
+            })
+          );
         } catch (e) {
-          console.error("Failed to save auth data to localStorage:", e)
+          console.error("Failed to save to localStorage:", e);
         }
-        router.push("/admin/dashboard")
+
+        document.cookie = `adminToken=${token}; path=/; SameSite=Lax;`;
+
+        router.push("/admin/dashboard");
       },
-      onError(err: Error | any) {
-        setError((err && (err.message || String(err))) ?? "Login failed")
+
+      onError(err: any) {
+        setError(err?.message || "Login failed");
       },
     }
-  )
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    mutation.mutate({ email, password })
-  }
+    e.preventDefault();
+    setError(null);
+    mutation.mutate({ email, password });
+  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md fade-in">
         <CardHeader className="space-y-2">
           <CardTitle className="flex flex-col gap-6 text-2xl">
-            <Link href="/" className="text-sm">{"<- Back to Homepage"}</Link>
+            <Link href="/" className="text-sm">
+              {"<- Back to Homepage"}
+            </Link>
             <h3>Admin Login</h3>
           </CardTitle>
-          <CardDescription>Enter your credentials to access the dashboard</CardDescription>
+          <CardDescription>
+            Enter your credentials to access the dashboard
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -74,16 +101,24 @@ export default function AdminLogin() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" disabled={mutation.status === "pending"}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={mutation.status === "pending"}
+            >
               {mutation.status === "pending" ? "Signing in..." : "Sign in"}
             </Button>
-            {error && <div className="text-sm text-destructive mt-2">{error}</div>}
+            {error && (
+              <div className="text-sm text-destructive mt-2">{error}</div>
+            )}
           </form>
           <div className="flex flex-row my-4">
-            <Link href={"/reset-password"} className="hover:underline">Reset Password</Link>
+            <Link href={"/reset-password"} className="hover:underline">
+              Reset Password
+            </Link>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

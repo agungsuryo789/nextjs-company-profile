@@ -1,26 +1,34 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { LayoutDashboard, FileText, Briefcase, LogOut, Menu, X } from "lucide-react"
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  LayoutDashboard,
+  FileText,
+  Briefcase,
+  LogOut,
+  Menu,
+  X,
+} from "lucide-react";
 
 const navItems = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { label: "Articles", href: "/admin/dashboard/articles", icon: FileText },
   { label: "Projects", href: "/admin/dashboard/projects", icon: Briefcase },
-]
+];
 
 export function AdminSidebar() {
-  const [isOpen, setIsOpen] = useState(false)
-  const pathname = usePathname()
-  const router = useRouter()
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
   const handleLogout = () => {
-    localStorage.removeItem("adminAuth")
-    router.push("/admin")
-  }
+    localStorage.removeItem("adminAuth");
+    document.cookie = "adminToken=; Max-Age=0; path=/;";
+    router.push("/admin");
+  };
 
   return (
     <>
@@ -33,7 +41,12 @@ export function AdminSidebar() {
       </button>
 
       {/* Overlay */}
-      {isOpen && <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setIsOpen(false)} />}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
 
       {/* Sidebar */}
       <aside
@@ -45,7 +58,9 @@ export function AdminSidebar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 mb-8">
             <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-              <span className="text-accent-foreground font-bold text-sm">A</span>
+              <span className="text-accent-foreground font-bold text-sm">
+                A
+              </span>
             </div>
             <span className="font-semibold text-sidebar-foreground">Admin</span>
           </Link>
@@ -53,8 +68,8 @@ export function AdminSidebar() {
           {/* Navigation */}
           <nav className="flex-1 space-y-2">
             {navItems.map((item) => {
-              const Icon = item.icon
-              const isActive = pathname === item.href
+              const Icon = item.icon;
+              const isActive = pathname === item.href;
               return (
                 <Link key={item.href} href={item.href}>
                   <button
@@ -69,17 +84,21 @@ export function AdminSidebar() {
                     <span className="text-sm font-medium">{item.label}</span>
                   </button>
                 </Link>
-              )
+              );
             })}
           </nav>
 
           {/* Logout Button */}
-          <Button variant="outline" onClick={handleLogout} className="w-full flex items-center gap-2 bg-transparent">
+          <Button
+            variant="outline"
+            onClick={handleLogout}
+            className="w-full flex items-center gap-2 bg-transparent"
+          >
             <LogOut className="w-4 h-4" />
             Logout
           </Button>
         </div>
       </aside>
     </>
-  )
+  );
 }
