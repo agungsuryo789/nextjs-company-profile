@@ -26,7 +26,7 @@ export const articlesServices = {
       body: JSON.stringify(data),
     }),
   getBySlug: (slug: string) => api(`/articles/${slug}`),
-  update: (id: number, data: any) =>
+  update: (id: string, data: any) =>
     api(`/articles/${id}`, { method: "PUT", body: JSON.stringify(data) }),
-  delete: (id: number) => api(`/articles/${id}`, { method: "DELETE" }),
+  delete: (id: string) => api(`/articles/${id}`, { method: "DELETE" }),
 };

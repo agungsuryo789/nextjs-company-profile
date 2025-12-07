@@ -1,5 +1,4 @@
 import { api } from "@/lib/api";
-import { get } from "http";
 
 export interface Project {
   id: string;
@@ -28,7 +27,7 @@ export const projectsServices = {
       body: JSON.stringify(data),
     }),
   getBySlug: (slug: string) => api(`/projects/${slug}`),
-  update: (id: number, data: any) =>
+  update: (id: string, data: any) =>
     api(`/projects/${id}`, { method: "PUT", body: JSON.stringify(data) }),
-  delete: (id: number) => api(`/projects/${id}`, { method: "DELETE" }),
+  delete: (id: string) => api(`/projects/${id}`, { method: "DELETE" }),
 };
