@@ -8,24 +8,19 @@ import { useQuery } from "@tanstack/react-query";
 import { articlesServices } from "@/services/articlesServices";
 
 export default function Articles() {
-  const { data: allArticles, error: errorAllArticle, isLoading } = useQuery<{
-    success: boolean
-    articles: any[]
+  const {
+    data: allArticles,
+    error: errorAllArticle,
+    isLoading,
+  } = useQuery<{
+    success: boolean;
+    articles: any[];
   }>({
     queryKey: ["articles"],
     queryFn: async () => {
       return await articlesServices.getAll();
     },
   });
-  const [visibleItems, setVisibleItems] = useState<number[]>([]);
-
-  useEffect(() => {
-    articlesData.forEach((_, index) => {
-      setTimeout(() => {
-        setVisibleItems((prev) => [...prev, index]);
-      }, index * 100);
-    });
-  }, []);
 
   const api = allArticles?.articles;
   const items = api
@@ -39,10 +34,10 @@ export default function Articles() {
       }))
     : articlesData;
 
-  if(isLoading) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
-  if(errorAllArticle) {
+  if (errorAllArticle) {
     return <div>Error loading articles.</div>;
   }
 
@@ -63,9 +58,7 @@ export default function Articles() {
             <Link
               key={article.id}
               href={`/articles/${article.slug}`}
-              className={`group block p-6 border border-border rounded-lg hover:border-cyan-500 hover:bg-muted/30 transition-all duration-500 ${
-                visibleItems.includes(index) ? "fade-in-up opacity-100" : "opacity-0"
-              }`}
+              className={`group block p-6 border border-border rounded-lg hover:border-cyan-500 hover:bg-muted/30 transition-all duration-500 fade-in-up opacity-100`}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
@@ -73,12 +66,16 @@ export default function Articles() {
                     <span className="text-xs font-medium text-cyan-500 uppercase tracking-widest">
                       {article.category}
                     </span>
-                    <span className="text-xs text-muted-foreground">{article.date}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {article.date}
+                    </span>
                   </div>
                   <h3 className="text-lg font-medium mb-2 group-hover:text-cyan-500 transition-colors">
                     {article.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground">{article.excerpt}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {article.excerpt}
+                  </p>
                 </div>
                 <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-cyan-500 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
               </div>

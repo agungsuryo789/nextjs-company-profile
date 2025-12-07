@@ -72,25 +72,25 @@ export default function Navigation() {
         <div className="md:hidden border-t border-border bg-background">
           <div className="px-6 py-4 flex flex-col gap-4">
             <Link
-              href="#articles"
+              href="/articles"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               Articles
             </Link>
             <Link
-              href="#projects"
+              href="/projects"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               Projects
             </Link>
             <Link
-              href="#"
+              href="/about"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               About
             </Link>
             <Link
-              href="#"
+              href="/contact"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               Contact
