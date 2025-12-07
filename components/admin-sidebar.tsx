@@ -11,12 +11,14 @@ import {
   LogOut,
   Menu,
   X,
+  KeyIcon
 } from "lucide-react";
 
 const navItems = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { label: "Articles", href: "/admin/dashboard/articles", icon: FileText },
   { label: "Projects", href: "/admin/dashboard/projects", icon: Briefcase },
+  { label: "Reset Password", href: "/admin/dashboard/reset-password", icon: KeyIcon },
 ];
 
 export function AdminSidebar() {
@@ -32,7 +34,6 @@ export function AdminSidebar() {
 
   return (
     <>
-      {/* Mobile Menu Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-background border border-border lg:hidden"
@@ -40,22 +41,18 @@ export function AdminSidebar() {
         {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
 
-      {/* Overlay */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
-
-      {/* Sidebar */}
       <aside
         className={`fixed left-0 top-0 h-screen w-64 bg-sidebar border-r border-sidebar-border z-40 transform transition-transform duration-300 lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full p-6">
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-2 mb-8">
             <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
               <span className="text-accent-foreground font-bold text-sm">
@@ -65,13 +62,12 @@ export function AdminSidebar() {
             <span className="font-semibold text-sidebar-foreground">Admin</span>
           </Link>
 
-          {/* Navigation */}
           <nav className="flex-1 space-y-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
               return (
-                <Link key={item.href} href={item.href}>
+                <Link key={item.href} href={item.href} className="hover:cursor-grab">
                   <button
                     onClick={() => setIsOpen(false)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
@@ -88,7 +84,6 @@ export function AdminSidebar() {
             })}
           </nav>
 
-          {/* Logout Button */}
           <Button
             variant="outline"
             onClick={handleLogout}

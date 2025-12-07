@@ -12,6 +12,7 @@ export interface Project {
   authorId: string;
   createdAt: string;
   updatedAt: string;
+  imageUrl: string | null;
   author: {
     id: string;
     email: string;

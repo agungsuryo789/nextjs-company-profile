@@ -103,7 +103,7 @@ export default function AdminLogin() {
             </div>
             <Button
               type="submit"
-              className="w-full"
+              className="w-full bg-cyan-500"
               disabled={mutation.status === "pending"}
             >
               {mutation.status === "pending" ? "Signing in..." : "Sign in"}
@@ -112,11 +112,6 @@ export default function AdminLogin() {
               <div className="text-sm text-destructive mt-2">{error}</div>
             )}
           </form>
-          <div className="flex flex-row my-4">
-            <Link href={"/reset-password"} className="hover:underline">
-              Reset Password
-            </Link>
-          </div>
         </CardContent>
       </Card>
     </div>

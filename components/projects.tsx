@@ -35,7 +35,7 @@ export default function Projects() {
           year: a.createdAt
             ? new Date(a.createdAt).getFullYear().toString()
             : "",
-          image: a.image ?? "/placeholder.svg",
+          image: a.imageUrl ?? "",
           slug: a.slug,
         }))
       : [];
@@ -92,16 +92,6 @@ export default function Projects() {
                 <p className="text-sm text-muted-foreground">
                   {project.description}
                 </p>
-                <div className="flex flex-wrap gap-2 pt-2">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-xs px-2 py-1 bg-muted text-muted-foreground rounded transition-colors group-hover:bg-cyan-500/10 group-hover:text-cyan-500"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
                 <p className="text-xs text-muted-foreground pt-2">
                   {project.year}
                 </p>

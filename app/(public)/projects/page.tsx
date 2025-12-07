@@ -36,6 +36,11 @@ export default async function ProjectsPage() {
                         {project.updatedAt}
                       </span>
                     </div>
+                    <img
+                      src={project.imageUrl || ""}
+                      alt={project.title}
+                      className=" max-h-80 object-contain group-hover:scale-105 transition-transform duration-500"
+                    />
                     <h2 className="text-lg font-medium mb-2">
                       {project.title}
                     </h2>
