@@ -1,9 +1,12 @@
 import Navigation from "@/components/navigation"
 import Footer from "@/components/footer"
 import Link from "next/link"
-import { articlesData } from "@/data/articles"
+import { articlesServices, type Article } from "@/services/articlesServices"
 
-export default function ArticlesPage() {
+export default async function asyncArticlesPage() {
+  const articlesDat = await articlesServices.getAll();
+  const articles = articlesDat.articles;
+  
   return (
     <main className="min-h-screen bg-background">
       <Navigation />
@@ -16,17 +19,16 @@ export default function ArticlesPage() {
           </div>
 
           <div className="grid gap-6">
-            {articlesData.map((article) => (
+            {articles.map((article: Article) => (
               <Link
                 key={article.id}
                 href={`/articles/${article.slug}`}
-                className="block p-6 border border-border rounded-lg hover:border-accent hover:bg-muted/30 transition-all duration-200"
+                className="block p-6 border border-border rounded-lg hover:border-cyan-500 hover:bg-muted/30 transition-all duration-200"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
-                      <span className="text-xs font-medium text-accent uppercase tracking-widest">{article.category}</span>
-                      <span className="text-xs text-muted-foreground">{article.date}</span>
+                      <span className="text-xs text-cyan-500">{article.publishedAt}</span>
                     </div>
                     <h2 className="text-lg font-medium mb-2">{article.title}</h2>
                     <p className="text-sm text-muted-foreground">{article.excerpt}</p>

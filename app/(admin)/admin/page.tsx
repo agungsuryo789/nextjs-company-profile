@@ -3,31 +3,43 @@
 import type React from "react"
 
 import { useState } from "react"
+import { useMutation } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { authServices } from "@/services/authServices"
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
+  const mutation = useMutation<any, Error, { email: string; password: string }>(
+    {
+      mutationFn: (data: { email: string; password: string }) => authServices.login(data),
+      onSuccess(data: any, variables: { email: string; password: string }) {
+        try {
+          localStorage.setItem(
+            "adminAuth",
+            JSON.stringify({ email: variables.email, authenticated: true, data })
+          )
+        } catch (e) {
+          console.error("Failed to save auth data to localStorage:", e)
+        }
+        router.push("/admin/dashboard")
+      },
+      onError(err: Error | any) {
+        setError((err && (err.message || String(err))) ?? "Login failed")
+      },
+    }
+  )
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
-
-    // Mock login
-    setTimeout(() => {
-      if (email && password) {
-        // Store mock auth state (in production, use secure sessions)
-        localStorage.setItem("adminAuth", JSON.stringify({ email, authenticated: true }))
-        router.push("/admin/dashboard")
-      }
-      setIsLoading(false)
-    }, 1000)
+    setError(null)
+    mutation.mutate({ email, password })
   }
 
   return (
@@ -62,9 +74,10 @@ export default function AdminLogin() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign in"}
+            <Button type="submit" className="w-full" disabled={mutation.status === "pending"}>
+              {mutation.status === "pending" ? "Signing in..." : "Sign in"}
             </Button>
+            {error && <div className="text-sm text-destructive mt-2">{error}</div>}
           </form>
           <div className="flex flex-row my-4">
             <Link href={"/reset-password"} className="hover:underline">Reset Password</Link>
